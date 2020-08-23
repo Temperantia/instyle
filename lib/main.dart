@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: ChatScreen.id,
+      initialRoute: FeedScreen.id,
       routes: {
         MyHomePage.id: (context) => MyHomePage(),
         ChatScreen.id: (context) => ChatScreen(),
