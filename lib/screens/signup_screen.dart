@@ -1,3 +1,4 @@
+import 'package:closet/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
           await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
 
       if (userCredential.user == null) {
-        print('registration failed');
+        print('print: registration failed');
       } else {
         Navigator.pushReplacementNamed(context, InfoScreen.id);
       }
@@ -76,6 +77,13 @@ class _SignupScreenState extends State<SignupScreen> {
               onPressed: () {
                 registerUser();
                 // TODO: Implement TextFormField validation
+              },
+            ),
+            MaterialButton(
+              child: Text("Already have an account? Log in!"),
+              color: Colors.grey,
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, LoginScreen.id);
               },
             ),
           ],

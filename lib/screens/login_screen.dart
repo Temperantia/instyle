@@ -1,4 +1,5 @@
 import 'package:closet/screens/profile_screen.dart';
+import 'package:closet/screens/signup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,15 +19,15 @@ class _LoginScreenState extends State<LoginScreen> {
           await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
 
       if (userCredential.user == null) {
-        print('login failed');
+        print('print: login failed');
       } else {
         Navigator.pushReplacementNamed(context, ProfileScreen.id);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        print('print: No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        print('print: Wrong password provided for that user.');
       }
     }
   }
@@ -74,6 +75,13 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 loginUser();
                 // TODO: Implement TextFormField validation
+              },
+            ),
+            MaterialButton(
+              child: Text("Don’t have an account? Sign up!"),
+              color: Colors.grey,
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, SignupScreen.id);
               },
             ),
           ],
