@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'info_screen.dart';
+
 class SignupScreen extends StatefulWidget {
   static const String id = 'signup_screen';
   @override
@@ -8,34 +10,37 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   void registerUser() async {
+    print('print: ' + _emailController.text);
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(email: "barry.allen@example.com", password: "SuperSecretPassword!");
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+
+      if (userCredential.user == null) {
+        print('registration failed');
+      } else {
+        Navigator.pushReplacementNamed(context, InfoScreen.id);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        print('print: The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        print('print: The account already exists for that email.');
       }
     } catch (e) {
-      print(e.toString());
+      print('print: ' + e.toString());
     }
   }
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  /*
-  FirebaseAuth.instance
-  .authStateChanges()
-  .listen((User user) {
-    if (user == null) {
-      print('User is currently signed out!');
-    } else {
-      print('User is signed in!');
-    }
-  });
-  */
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +48,39 @@ class _SignupScreenState extends State<SignupScreen> {
       appBar: AppBar(
         title: Text("SignupScreen"),
       ),
-      body: Center(),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("LOGO"),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: TextField(
+                controller: _emailController,
+                autocorrect: false,
+                decoration: InputDecoration(labelText: 'Enter your email'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: TextField(
+                controller: _passwordController,
+                autocorrect: false,
+                obscureText: true,
+                decoration: InputDecoration(labelText: 'Enter your password'),
+              ),
+            ),
+            MaterialButton(
+              child: Text("Register"),
+              color: Colors.grey,
+              onPressed: () {
+                registerUser();
+                // TODO: Implement TextFormField validation
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

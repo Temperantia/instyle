@@ -1,3 +1,4 @@
+import 'package:closet/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -8,10 +9,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   void loginUser() async {
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(email: "barry.allen@example.com", password: "SuperSecretPassword!");
+          await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+
+      if (userCredential.user == null) {
+        print('login failed');
+      } else {
+        Navigator.pushReplacementNamed(context, ProfileScreen.id);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -21,19 +31,14 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  /*
-  FirebaseAuth.instance
-  .authStateChanges()
-  .listen((User user) {
-    if (user == null) {
-      print('User is currently signed out!');
-    } else {
-      print('User is signed in!');
-    }
-  });
-  */
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,39 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text("LoginScreen"),
       ),
-      body: Center(),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("LOGO"),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: TextField(
+                controller: _emailController,
+                autocorrect: false,
+                decoration: InputDecoration(labelText: 'Enter your email'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: TextField(
+                controller: _passwordController,
+                autocorrect: false,
+                obscureText: true,
+                decoration: InputDecoration(labelText: 'Enter your password'),
+              ),
+            ),
+            MaterialButton(
+              child: Text("Log in"),
+              color: Colors.grey,
+              onPressed: () {
+                loginUser();
+                // TODO: Implement TextFormField validation
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

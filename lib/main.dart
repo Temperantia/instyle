@@ -1,4 +1,5 @@
 import 'package:closet/screens/chat_screen.dart';
+import 'package:closet/screens/info_screen.dart';
 import 'package:closet/screens/login_screen.dart';
 import 'package:closet/screens/management_screen.dart';
 import 'package:closet/screens/profile_screen.dart';
@@ -30,6 +31,7 @@ class App extends StatelessWidget {
         ProfileScreen.id: (context) => ProfileScreen(),
         ProposalsScreen.id: (context) => ProposalsScreen(),
         SignupScreen.id: (context) => SignupScreen(),
+        InfoScreen.id: (context) => InfoScreen(),
       },
     );
   }
